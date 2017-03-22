@@ -15,7 +15,7 @@ def render_file(folder, name):
 
 @app.route('/')
 def home():
-    s = r" \ ".strip()
+    s = "\\"
     meis = glob.glob(r"mei_files\*\*_MENSURAL.mei")
     meis = [ (mei, mei.split(s)[1:]) for mei in meis]
     #return str(meis)
@@ -31,8 +31,8 @@ def load_mei_tk(mensural=True):
     # Suggested by developer on github for mensural MEI files
     if mensural:
         tk.setNoLayout(True)
-        tk.setPageHeight(800)
-        tk.setPageWidth(2)
+        #tk.setPageHeight(800)
+        #tk.setPageWidth(2)
     tk.setFormat("mei")
     return tk
 
@@ -46,4 +46,3 @@ def mei_to_svg(file_path: str):
 
 if __name__ == "__main__":
     app.run()
-
