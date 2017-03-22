@@ -4,21 +4,46 @@
 # https://github.com/rism-ch/verovio/issues/491
 # https://github.com/rism-ch/verovio/issues/490
 
+from flask import Flask,render_template
+import glob
+
+app = Flask(__name__)
+
+@app.route('/render_svg/<folder>/<name>')
+def render_file(folder, name):
+    return mei_to_svg(fr"mei_files\{folder}\{name}")
+
+@app.route('/')
+def home():
+    s = r" \ ".strip()
+    meis = glob.glob(r"mei_files\*\*_MENSURAL.mei")
+    meis = [ (mei, mei.split(s)[1:]) for mei in meis]
+    #return str(meis)
+    return render_template("index.html", meis=meis)
 
 import verovio
-tk = verovio.toolkit(False)
 
-# The path for my resource folder - probably will change on server
-tk.setResourcePath(r"C:\Users\misin\OneDrive\Documents\GitHub\verovio\data")
 
-# Suggested by developer on github for mensural MEI files
-tk.setNoLayout(True)
+def load_mei_tk(mensural=True):
+    tk = verovio.toolkit(False)
+    # The path for my resource folder - probably will change on server
+    tk.setResourcePath(r"C:\Users\misin\OneDrive\Documents\GitHub\verovio\data")
+    # Suggested by developer on github for mensural MEI files
+    if mensural:
+        tk.setNoLayout(True)
+        tk.setPageHeight(800)
+        tk.setPageWidth(2)
+    tk.setFormat("mei")
+    return tk
 
-# Needed to tell the verovio that it is mei
-tk.setFormat("mei")
 
-# loads the mei file
-tk.loadFile("vos_pastores_MENSURAL.mei")
 
-# saves as SVG
-tk.renderToSvgFile("test.svg", 1)
+def mei_to_svg(file_path: str):
+    tk = load_mei_tk()
+    tk.loadFile(file_path)
+    svg_string = tk.renderToSvg(1)
+    return svg_string
+
+if __name__ == "__main__":
+    app.run()
+

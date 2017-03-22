@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>MEI Directory</title>
+</head>
+<body>
+Here are the MEI files:
+<ul>
+{% for mei in meis %}
+    <li><a href="render_svg/{{ mei[1][0] }}/{{ mei[1][1] }}">{{ mei[0] }}</a></li>
+{% endfor %}
+</ul>
+</body>
+</html>
